@@ -1,19 +1,33 @@
 import express from "express";
-const { ApolloServer, gql } = require("apollo-server-express");
-const { typeDefs, resolvers } = require("./schema");
+import mongoose from "mongoose";
 
-const server = new ApolloServer({
-  typeDefs,
-  resolvers,
-});
+import server from "./server";
 
-const app = express();
+// const DB_USER = "username"; // use your mongodb cluster username
+// const DB_PASSWORD = "password"; // use your mongodb cluster password
+// const DB_NAME = "ecommerce";
 const PORT = 4444;
 
-server.applyMiddleware({ app });
+const createServer = async () => {
+  try {
+    await mongoose.connect("mongodb://localhost:27017/mernextg-shop", {
+      useCreateIndex: true,
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
 
-app.listen({ port: PORT }, () =>
-  console.log(
-    `🚀 Server ready at http://localhost:${PORT}${server.graphqlPath}`
-  )
-);
+    const app = express();
+
+    server.applyMiddleware({ app });
+
+    app.listen({ port: PORT }, () =>
+      console.log(
+        `🚀 Server ready at http://localhost:${PORT}${server.graphqlPath}`
+      )
+    );
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+createServer();
