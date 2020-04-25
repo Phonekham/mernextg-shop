@@ -1,12 +1,14 @@
+import dotenv from "dotenv";
 import express from "express";
 import mongoose from "mongoose";
 
+dotenv.config();
 import server from "./server";
 
 // const DB_USER = "username"; // use your mongodb cluster username
 // const DB_PASSWORD = "password"; // use your mongodb cluster password
 // const DB_NAME = "ecommerce";
-const PORT = 4444;
+const { PORT } = process.env;
 
 const createServer = async () => {
   try {
