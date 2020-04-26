@@ -45,7 +45,33 @@ const Mutation = {
       path: "user",
       populate: { path: "products" },
     });
-  },
+  }, //************************ End createProduct *************************/
+  updateProduct: async (parent, args, context, info) => {
+    const { id, description, price, imageUrl } = args;
+    //TODO Check if user logged in
+
+    const product = await Product.findById(id);
+
+    // Check if user is owner
+    const userId = "5ea50c78dfcce43dd43fe5dd";
+    if (userId !== product.user.toString()) {
+      throw new Error("You are not authorized");
+    }
+
+    // form update information
+    const updateInfo = {
+      description: !!description ? description : product.description,
+      price: !!price ? price : product.price,
+      imageUrl: !!imageUrl ? imageUrl : product.imageUrl,
+    };
+    // update product in database
+    await Product.findByIdAndUpdate(id, updateInfo);
+    // find the updated product
+    const updatedProduct = await Product.findById(id).populate({
+      path: "user",
+    });
+    return updatedProduct;
+  }, //************************ End updateProduct *************************/
   addToCart: async (parent, args, context, info) => {
     const { id } = args;
     try {
