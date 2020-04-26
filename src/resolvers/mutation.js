@@ -24,7 +24,7 @@ const Mutation = {
     return User.create({ ...args, email, password });
   }, // ********************** End Signup  ***************************
   createProduct: async (parent, args, context, info) => {
-    const userId = "5ea4f4b0583d2013f8a2d925";
+    const userId = "5ea50c78dfcce43dd43fe5dd";
 
     if (!args.description || !args.price || !args.imageUrl) {
       throw new Error("Please provide all required fields");
