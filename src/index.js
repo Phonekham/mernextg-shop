@@ -16,6 +16,7 @@ const createServer = async () => {
       useCreateIndex: true,
       useNewUrlParser: true,
       useUnifiedTopology: true,
+      useFindAndModify: true,
     });
 
     const app = express();
