@@ -24,9 +24,8 @@ const Mutation = {
 
     return User.create({ ...args, email, password });
   }, // ********************** End Signup  ***************************
-  createProduct: async (parent, args, context, info) => {
-    const userId = "5ea50c78dfcce43dd43fe5dd";
-
+  createProduct: async (parent, args, { userId }, info) => {
+    if (!userId) throw new Error("please login");
     if (!args.description || !args.price || !args.imageUrl) {
       throw new Error("Please provide all required fields");
     }
@@ -46,14 +45,14 @@ const Mutation = {
       populate: { path: "products" },
     });
   }, //************************ End createProduct *************************/
-  updateProduct: async (parent, args, context, info) => {
+  updateProduct: async (parent, args, { userId }, info) => {
     const { id, description, price, imageUrl } = args;
-    //TODO Check if user logged in
+    // Check if user logged in
+    if (!userId) throw new Error("please login");
 
     const product = await Product.findById(id);
 
     // Check if user is owner
-    const userId = "5ea50c78dfcce43dd43fe5dd";
     if (userId !== product.user.toString()) {
       throw new Error("You are not authorized");
     }
@@ -72,11 +71,11 @@ const Mutation = {
     });
     return updatedProduct;
   }, //************************ End updateProduct *************************/
-  addToCart: async (parent, args, context, info) => {
+  addToCart: async (parent, args, { userId }, info) => {
     const { id } = args;
+    if (!userId) throw new Error("please login");
     try {
       // find user who perform add to cart --> from login user
-      const userId = "5ea50c78dfcce43dd43fe5dd";
       // check if new addToCArt item is already in user carts
       const user = await User.findById(userId).populate({
         path: "carts",
@@ -122,13 +121,12 @@ const Mutation = {
       console.log(err);
     }
   }, //************************ End addToCart *************************/
-  deleteCart: async (parent, args, context, info) => {
+  deleteCart: async (parent, args, { userId }, info) => {
     const { id } = args; //cartItem id
     const cart = await CartItem.findById(id);
 
-    // TODO check if user is logged in
-
-    const userId = "5ea50c78dfcce43dd43fe5dd";
+    //  check if user is logged in
+    if (!userId) throw new Error("please login");
     const user = await User.findById(userId);
 
     // check owner of the cart
