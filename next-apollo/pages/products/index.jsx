@@ -1,24 +1,64 @@
 import Link from "next/link";
 
 const fakeData = [
-  { id: 1, description: "product1", price: 100 },
-  { id: 2, description: "product2", price: 200 },
-  { id: 3, description: "product3", price: 300 },
+  {
+    id: 1,
+    description: "product1",
+    price: 100,
+    imageUrl: "https://s3.images-iherb.com/ygt/ygt41533/v/11.jpg",
+  },
+  {
+    id: 2,
+    description: "product2",
+    price: 200,
+    imageUrl: "https://s3.images-iherb.com/hnb/hnb01381/v/0.jpg",
+  },
+  {
+    id: 3,
+    description: "product3",
+    price: 300,
+    imageUrl: "https://s3.images-iherb.com/hrn/hrn00959/v/4.jpg",
+  },
 ];
 
 const products = () => {
   return (
-    <div>
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "space-around",
+        alignItems: "center",
+        marginTop: "40px",
+      }}
+    >
       {fakeData.map((prod) => (
-        <Link
+        <div
           key={prod.id}
-          href="/products/[productId]"
-          as={`/products/${prod.id}`}
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
         >
-          <a>
-            <div>{prod.description}</div>
-          </a>
-        </Link>
+          <Link href="/products/[productId]" as={`/products/${prod.id}`}>
+            <a>
+              <img src={prod.imageUrl} alt={prod.description} width="250px" />
+            </a>
+          </Link>
+          <h3>{prod.description}</h3>
+          <h4>{prod.price} $</h4>
+          <button
+            style={{
+              background: "green",
+              color: "white",
+              padding: "10px",
+              cursor: "pointer",
+              border: "none",
+            }}
+          >
+            Add to Cart
+          </button>
+        </div>
       ))}
     </div>
   );
