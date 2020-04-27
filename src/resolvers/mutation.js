@@ -121,6 +121,27 @@ const Mutation = {
     } catch (err) {
       console.log(err);
     }
+  }, //************************ End addToCart *************************/
+  deleteCart: async (parent, args, context, info) => {
+    const { id } = args; //cartItem id
+    const cart = await CartItem.findById(id);
+
+    // TODO check if user is logged in
+
+    const userId = "5ea50c78dfcce43dd43fe5dd";
+    const user = await User.findById(userId);
+
+    // check owner of the cart
+    if (cart.user.toString() !== userId) {
+      throw new Error("Not authorized");
+    }
+    // Delete cart
+    const deleteCart = await CartItem.findOneAndRemove(id);
+    const updatedUserCart = user.carts.filter(
+      (cartId) => cartId.toString() !== deleteCart.id.toString()
+    );
+    await User.findByIdAndUpdate(userId, { carts: updatedUserCart });
+    return deleteCart;
   },
 };
 
