@@ -42,10 +42,12 @@ const Query = {
       populate: { path: "products" },
     }),
   products: (parent, args, context, info) =>
-    Product.find().populate({
-      path: "user",
-      populate: { path: "products" },
-    }),
+    Product.find()
+      .populate({
+        path: "user",
+        populate: { path: "products" },
+      })
+      .sort({ createdAt: "desc" }),
 };
 
 export default Query;

@@ -1,16 +1,23 @@
-import { ApolloProvider } from "@apollo/react-hooks";
+// import { ApolloProvider } from "@apollo/react-hooks";
 
 import PageLayout from "../components/PageLayout";
-import apolloClient from "../apollo/apolloClient";
 
-function MyApp({ Component, pageProps, apollo }) {
+// function MyApp({ Component, pageProps, apollo }) {
+//   return (
+//     <ApolloProvider client={apollo}>
+//       <PageLayout>
+//         <Component {...pageProps}></Component>
+//       </PageLayout>
+//     </ApolloProvider>
+//   );
+// }
+
+function MyApp({ Component, pageProps }) {
   return (
-    <ApolloProvider client={apollo}>
-      <PageLayout>
-        <Component {...pageProps}></Component>
-      </PageLayout>
-    </ApolloProvider>
+    <PageLayout>
+      <Component {...pageProps}></Component>
+    </PageLayout>
   );
 }
 
-export default apolloClient(MyApp);
+export default MyApp;

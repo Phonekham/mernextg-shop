@@ -34,6 +34,11 @@ const Nav = () => {
           </Link>
         </li>
         <li style={liStyle}>
+          <Link href="/products">
+            <a style={aStyle}>Products</a>
+          </Link>
+        </li>
+        <li style={liStyle}>
           <Link href="/cart">
             <a style={aStyle}>Cart</a>
           </Link>
