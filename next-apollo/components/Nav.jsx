@@ -12,7 +12,7 @@ const aStyle = {
 };
 
 const Nav = () => {
-  const { user } = useContext(AuthContext);
+  const { user, signout } = useContext(AuthContext);
 
   return (
     <nav
@@ -50,7 +50,19 @@ const Nav = () => {
                 <a style={aStyle}>Cart</a>
               </Link>
             </li>
-            <button>signout</button>
+            <button
+              style={{
+                background: "grey",
+                fontSize: "18px",
+                padding: "10px",
+                color: "white",
+                border: "none",
+                cursor: "pointer",
+              }}
+              onClick={signout}
+            >
+              signout
+            </button>
           </>
         )}
         {!user && (
