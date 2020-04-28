@@ -1,7 +1,11 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import Link from "next/link";
+import Router from "next/router";
 import { useMutation } from "@apollo/react-hooks";
 import gql from "graphql-tag";
+import Cookies from "js-cookie";
+
+import { AuthContext } from "../appState/AuthProvider";
 
 const LOG_IN = gql`
   mutation LOG_IN($email: String!, $password: String!) {
@@ -34,11 +38,15 @@ const Signin = () => {
     password: "",
   });
 
+  const { setAuthUser } = useContext(AuthContext);
+
   const [login, { loading, error }] = useMutation(LOG_IN, {
     variables: { ...userInfo },
     onCompleted: (data) => {
       if (data) {
-        console.log(data);
+        setAuthUser(data.login.user);
+        Cookies.set("jwt", data.login.jwt);
+        Router.push("/products");
         setUserInfo({
           email: "",
           password: "",

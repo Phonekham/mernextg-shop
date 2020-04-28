@@ -1,5 +1,7 @@
-import React from "react";
+import { useContext } from "react";
 import Link from "next/link";
+
+import { AuthContext } from "../appState/AuthProvider";
 
 const liStyle = { listStyle: "none" };
 const aStyle = {
@@ -10,6 +12,8 @@ const aStyle = {
 };
 
 const Nav = () => {
+  const { user } = useContext(AuthContext);
+
   return (
     <nav
       style={{
@@ -38,21 +42,31 @@ const Nav = () => {
             <a style={aStyle}>Products</a>
           </Link>
         </li>
-        <li style={liStyle}>
-          <Link href="/cart">
-            <a style={aStyle}>Cart</a>
-          </Link>
-        </li>
-        <li style={liStyle}>
-          <Link href="/signin">
-            <a style={aStyle}>Signin</a>
-          </Link>
-        </li>
-        <li style={liStyle}>
-          <Link href="signup">
-            <a style={aStyle}>Signup</a>
-          </Link>
-        </li>
+
+        {user && (
+          <>
+            <li style={liStyle}>
+              <Link href="/cart">
+                <a style={aStyle}>Cart</a>
+              </Link>
+            </li>
+            <button>signout</button>
+          </>
+        )}
+        {!user && (
+          <>
+            <li style={liStyle}>
+              <Link href="/signin">
+                <a style={aStyle}>Signin</a>
+              </Link>
+            </li>
+            <li style={liStyle}>
+              <Link href="signup">
+                <a style={aStyle}>Signup</a>
+              </Link>
+            </li>
+          </>
+        )}
       </ul>
     </nav>
   );

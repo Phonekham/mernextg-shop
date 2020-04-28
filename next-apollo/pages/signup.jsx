@@ -1,4 +1,3 @@
-import apolloClient from "../apollo/apolloClient";
 import Signup from "../components/Signup";
 
 const signup = () => {
@@ -9,4 +8,4 @@ const signup = () => {
   );
 };
 
-export default apolloClient(signup);
+export default signup;

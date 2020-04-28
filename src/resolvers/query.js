@@ -5,8 +5,7 @@ const Query = {
   user: (parent, args, { userId }, info) => {
     // check if user logged in
     if (!userId) throw new Error("please login");
-    if (userId !== args.id) throw new Error("Not authorized");
-    return User.findById(args.id)
+    return User.findById(userId)
       .populate({
         path: "products",
         populate: { path: "user" },
