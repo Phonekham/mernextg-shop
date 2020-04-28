@@ -1,5 +1,12 @@
+import apolloClient from "../apollo/apolloClient";
+import Signup from "../components/Signup";
+
 const signup = () => {
-  return <div>signup</div>;
+  return (
+    <div>
+      <Signup></Signup>
+    </div>
+  );
 };
 
-export default signup;
+export default apolloClient(signup);
