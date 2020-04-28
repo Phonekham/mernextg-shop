@@ -6,6 +6,7 @@ type Query {
 }
 
 type Mutation {
+  requestResetPassword(email: String!): Message!
   login(email: String!, password: String!): AuthData!
   signup(name: String!, email: String!, password: String!): User
   createProduct(
@@ -29,7 +30,6 @@ type User {
   id: ID!
   name: String!
   email: String!
-  password: String!
   products: [Product]
   carts: [CartItem]!
   createdAt: Date!
@@ -55,4 +55,8 @@ type CartItem {
 type AuthData {
   user: User!
   jwt: String
+}
+
+type Message {
+  message: String!
 }

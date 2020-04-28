@@ -1,5 +1,6 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import { randomBytes } from "crypto";
 
 import User from "../models/user";
 import Product from "../models/product";
@@ -43,6 +44,18 @@ const Mutation = {
 
     return User.create({ ...args, email, password });
   }, // ********************** End Signup  ***************************
+  requestResetPassword: async (parent, { email }, context, info) => {
+    const user = await User.findOne({ email });
+    if (!user) throw new Error("Email not found");
+    const resetPasswordToken = randomBytes(32).toString("hex");
+    const resetTokenExpiry = Date.now() * 30 * 60 * 10;
+    await User.findByIdAndUpdate(user.id, {
+      resetPasswordToken,
+      resetTokenExpiry,
+    });
+
+    return { message: "Please check your email to proceed to reset password" };
+  },
   createProduct: async (parent, args, { userId }, info) => {
     if (!userId) throw new Error("please login");
     if (!args.description || !args.price || !args.imageUrl) {

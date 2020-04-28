@@ -46,8 +46,6 @@ MyApp.getInitialProps = async ({ ctx, router }) => {
     return __NEXT_DATA__.props.pageProps;
   }
 
-  console.log("router-->", router);
-
   const { headers } = ctx.req;
   const cookies = headers && cookie.parse(headers.cookie || "");
   const token = cookies && cookies.jwt;
