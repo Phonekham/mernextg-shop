@@ -30,8 +30,6 @@ const QUERY_USER = {
 };
 
 function MyApp({ Component, pageProps, apollo, user }) {
-  console.log(user);
-
   return (
     <ApolloProvider client={apollo}>
       <AuthProvider userData={user}>
@@ -43,15 +41,24 @@ function MyApp({ Component, pageProps, apollo, user }) {
   );
 }
 
-MyApp.getInitialProps = async ({ ctx }) => {
+MyApp.getInitialProps = async ({ ctx, router }) => {
   if (process.browser) {
     return __NEXT_DATA__.props.pageProps;
   }
 
+  console.log("router-->", router);
+
   const { headers } = ctx.req;
   const cookies = headers && cookie.parse(headers.cookie || "");
   const token = cookies && cookies.jwt;
-  console.log(token);
+
+  if (!token) {
+    if (router.pathname === "/cart") {
+      ctx.res.writeHead(302, { location: "/signin" });
+      ctx.res.end();
+    }
+    return null;
+  }
 
   const response = await fetch("http://localhost:4444/graphql", {
     method: "post",
