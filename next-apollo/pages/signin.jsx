@@ -1,5 +1,8 @@
-const signin = () => {
-  return <div>signin</div>;
+import apolloClient from "../apollo/apolloClient";
+import SignIn from "../components/Signin";
+
+const SignInPage = () => {
+  return <SignIn></SignIn>;
 };
 
-export default signin;
+export default apolloClient(SignInPage);

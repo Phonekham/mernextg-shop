@@ -1,23 +1,7 @@
-import bcrypt from "bcryptjs";
-
 import User from "../models/user";
 import Product from "../models/product";
-import jwt from "jsonwebtoken";
 
 const Query = {
-  login: async (parent, args, context, info) => {
-    const { email, password } = args;
-    // find user in DB
-    const user = await User.findOne({ email });
-    if (!user) throw new Error("Email not found, please signup");
-    // check if password is correct
-    const validPassword = await bcrypt.compare(password, user.password);
-    if (!validPassword) throw new Error("Invalid email or password");
-    const token = jwt.sign({ userId: user.id }, process.env.SECRET, {
-      expiresIn: "30days",
-    });
-    return { userId: user.id, jwt: token };
-  },
   user: (parent, args, { userId }, info) => {
     // check if user logged in
     if (!userId) throw new Error("please login");

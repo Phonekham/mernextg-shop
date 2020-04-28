@@ -1,10 +1,29 @@
-import bcryptjs from "bcryptjs";
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 
 import User from "../models/user";
 import Product from "../models/product";
 import CartItem from "../models/cartItem";
 
 const Mutation = {
+  login: async (parent, args, context, info) => {
+    const { email, password } = args;
+    // find user in DB
+    const user = await User.findOne({ email })
+      .populate({
+        path: "products",
+        populate: { path: "user" },
+      })
+      .populate({ path: "carts", populate: { path: "product" } });
+    if (!user) throw new Error("Email not found, please signup");
+    // check if password is correct
+    const validPassword = await bcrypt.compare(password, user.password);
+    if (!validPassword) throw new Error("Invalid email or password");
+    const token = jwt.sign({ userId: user.id }, process.env.SECRET, {
+      expiresIn: "30days",
+    });
+    return { user, jwt: token };
+  },
   signup: async (parent, args, context, info) => {
     // Check if email already exist
     const email = args.email.trim().toLowerCase();
@@ -20,7 +39,7 @@ const Mutation = {
       throw new Error("Password must be atleast 6 chars");
     }
 
-    const password = await bcryptjs.hash(args.password, 10);
+    const password = await bcrypt.hash(args.password, 10);
 
     return User.create({ ...args, email, password });
   }, // ********************** End Signup  ***************************
