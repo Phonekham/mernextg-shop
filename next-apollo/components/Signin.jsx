@@ -117,7 +117,7 @@ const Signin = () => {
       <div style={{ width: "30%", margin: "auto", cursor: "pointer" }}>
         <p>
           Forgot password ?{" "}
-          <span onClick={() => Router.push("/signin/resetpassword")}>
+          <span onClick={() => Router.push("/signin/requestresetpassword")}>
             Click here
           </span>
         </p>

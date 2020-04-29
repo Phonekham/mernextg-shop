@@ -1,6 +1,8 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { randomBytes } from "crypto";
+// import sgMail from "@sendgrid/mail";
+import nodemailer from "nodemailer";
 
 import User from "../models/user";
 import Product from "../models/product";
@@ -52,6 +54,55 @@ const Mutation = {
     await User.findByIdAndUpdate(user.id, {
       resetPasswordToken,
       resetTokenExpiry,
+    });
+
+    // send link to user
+    // sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+    // try {
+    //   const message = {
+    //     from: "phonekham.keomany@gmail.com",
+    //     to: user.email,
+    //     subject: "Reset password link",
+    //     html: `
+    //   <div>
+    //     <p>Please click the link to reset password</p> \n\n
+    //     <a href='http://localhost:3000/signin/resetpassword?resetToken=${resetPasswordToken}' target='blank'></a>
+    //   </div>
+    //   `,
+    //   };
+    //   await sgMail.send(message);
+    // } catch (error) {
+    //   console.log(error);
+    // }
+
+    const transport = nodemailer.createTransport({
+      host: "smtp.mailtrap.io",
+      port: 2525,
+      auth: {
+        user: "fdfe5587b16ba4",
+        pass: "e919d47cbcfed3",
+      },
+    });
+
+    const message = {
+      from: "elonmusk@tesla.com", // Sender address
+      to: user.email, // List of recipients
+      subject: "Design Your Model S | Tesla", // Subject line
+      text: "Please click the link to reset password", // Plain text body
+      html: `
+       <div>
+        <a href='http://localhost:3000/signin/resetpassword?resetToken=${resetPasswordToken}' target='blank' style={{color: 'blue'}}>Click to reset your password</a>
+      </div>
+       `,
+    };
+    console.log(message);
+
+    transport.sendMail(message, function (err, info) {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log(info);
+      }
     });
 
     return { message: "Please check your email to proceed to reset password" };
