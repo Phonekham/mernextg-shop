@@ -29,6 +29,8 @@ const QUERY_USER = {
 };
 
 function MyApp({ Component, pageProps, apollo, user }) {
+  console.log(user);
+
   return (
     <ApolloProvider client={apollo}>
       <AuthProvider userData={user}>
@@ -51,7 +53,7 @@ MyApp.getInitialProps = async ({ ctx, router }) => {
   // console.log("token-->", token);
 
   if (!token) {
-    if (router.pathname === "/cart") {
+    if (router.pathname === "/cart" || router.pathname === "/manageproduct") {
       ctx.res.writeHead(302, { location: "/signin" });
       ctx.res.end();
     }

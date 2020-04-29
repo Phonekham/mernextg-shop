@@ -13,6 +13,7 @@ const aStyle = {
 
 const Nav = () => {
   const { user, signout } = useContext(AuthContext);
+  console.log(user);
 
   return (
     <nav
@@ -48,6 +49,11 @@ const Nav = () => {
             <li style={liStyle}>
               <Link href="/cart">
                 <a style={aStyle}>Cart</a>
+              </Link>
+            </li>
+            <li style={liStyle}>
+              <Link href="/manageproduct">
+                <a style={aStyle}>Manage Product</a>
               </Link>
             </li>
             <button
