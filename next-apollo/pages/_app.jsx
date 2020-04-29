@@ -13,7 +13,6 @@ const QUERY_USER = {
       id
       name
       email
-      password
       carts {
         product {
           id
@@ -49,6 +48,7 @@ MyApp.getInitialProps = async ({ ctx, router }) => {
   const { headers } = ctx.req;
   const cookies = headers && cookie.parse(headers.cookie || "");
   const token = cookies && cookies.jwt;
+  // console.log("token-->", token);
 
   if (!token) {
     if (router.pathname === "/cart") {
@@ -69,9 +69,9 @@ MyApp.getInitialProps = async ({ ctx, router }) => {
 
   if (response.ok) {
     const result = await response.json();
-    // console.log(result);
-
     return { user: result.data.user };
+  } else {
+    return null;
   }
 
   // const appProps = await App.getInitialProps(appContext);

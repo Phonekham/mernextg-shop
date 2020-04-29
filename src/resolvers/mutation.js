@@ -50,7 +50,7 @@ const Mutation = {
     const user = await User.findOne({ email });
     if (!user) throw new Error("Email not found");
     const resetPasswordToken = randomBytes(32).toString("hex");
-    const resetTokenExpiry = Date.now() * 30 * 60 * 10;
+    const resetTokenExpiry = Date.now() + 30 * 60 * 1000;
     await User.findByIdAndUpdate(user.id, {
       resetPasswordToken,
       resetTokenExpiry,
@@ -106,6 +106,21 @@ const Mutation = {
     });
 
     return { message: "Please check your email to proceed to reset password" };
+  }, //************************ End requestResetPassword *************************/
+  resetPassword: async (parent, { password, token }, context, info) => {
+    const user = await User.findOne({ resetPasswordToken: token });
+    if (!user) throw new Error("invalid token");
+    const isTokenExpired = user.resetTokenExpiry < Date.now();
+    if (isTokenExpired) throw new Error("invalid token is expired");
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    await User.findByIdAndUpdate(user.id, {
+      password: hashedPassword,
+      resetPasswordToken: null,
+      resetTokenExpiry: null,
+    });
+
+    return { message: "Youe have successfully reset password please signin" };
   },
   createProduct: async (parent, args, { userId }, info) => {
     if (!userId) throw new Error("please login");

@@ -1,32 +1,31 @@
 import { useState, useContext } from "react";
+import { useRouter } from "next/router";
 import Link from "next/link";
-import Router from "next/router";
 import { useMutation } from "@apollo/react-hooks";
 import gql from "graphql-tag";
 
-// const REQUEST_RESET_PASSWORD = gql`
-//   mutation requestResetPassword($email: String!) {
-//     requestResetPassword(email: $email) {
-//       message
-//     }
-//   }
-// `;
+const RESET_PASSWORD = gql`
+  mutation resetPassword($password: String!, $token: String!) {
+    resetPassword(password: $password, token: $token) {
+      message
+    }
+  }
+`;
 
 const ResetPassword = () => {
   const [password, setPassword] = useState("");
-  //   const [message, setMessage] = useState("");
+  const [message, setMessage] = useState("");
 
-  //   const [requestResetPassword, { loading, error }] = useMutation(
-  //     REQUEST_RESET_PASSWORD,
-  //     {
-  //       variables: { email },
-  //       onCompleted: (data) => {
-  //         if (data) {
-  //           setMessage(data.requestResetPassword.message);
-  //         }
-  //       },
-  //     }
-  //   );
+  const router = useRouter();
+
+  const [resetPassword, { loading, error }] = useMutation(RESET_PASSWORD, {
+    variables: { password, token: router && router.query.resetToken },
+    onCompleted: (data) => {
+      if (data) {
+        setMessage(data.resetPassword.message);
+      }
+    },
+  });
 
   const handleChange = (e) => {
     setPassword(e.target.value);
@@ -35,7 +34,7 @@ const ResetPassword = () => {
   const handleSubmit = async (e) => {
     try {
       e.preventDefault();
-      //   await requestResetPassword();
+      await resetPassword();
     } catch (error) {
       console.log(error);
     }
@@ -74,19 +73,19 @@ const ResetPassword = () => {
             fontSize: "18px",
           }}
           type="submit"
-          //   disabled={loading}
+          disabled={loading}
         >
           Submit
         </button>
       </form>
       <div style={{ width: "30%", margin: "auto" }}>
-        {/* {message && <p style={{ color: "blue" }}>{message}</p>} */}
+        {message && <p style={{ color: "blue" }}>{message}</p>}
       </div>
-      {/* <div style={{ width: "30%", margin: "auto" }}>
+      <div style={{ width: "30%", margin: "auto" }}>
         {error && (
           <p style={{ color: "red" }}>{error.graphQLErrors[0].message}</p>
         )}
-      </div> */}
+      </div>
     </div>
   );
 };
