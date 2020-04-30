@@ -18,6 +18,7 @@ const QUERY_USER = {
           id
           description
         }
+        quantity
       }
       products {
         id

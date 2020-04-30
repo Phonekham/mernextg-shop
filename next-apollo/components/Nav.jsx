@@ -1,7 +1,9 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import Link from "next/link";
+import { useQuery } from "@apollo/react-hooks";
 
 import { AuthContext } from "../appState/AuthProvider";
+import { ME } from "./UserProducts";
 
 const liStyle = { listStyle: "none" };
 const aStyle = {
@@ -12,7 +14,14 @@ const aStyle = {
 };
 
 const Nav = () => {
-  const { user, signout } = useContext(AuthContext);
+  const { user, signout, setAuthUser } = useContext(AuthContext);
+  const { data } = useQuery(ME);
+
+  useEffect(() => {
+    if (data) {
+      setAuthUser(data.user);
+    }
+  }, [data]);
 
   return (
     <nav
@@ -47,7 +56,23 @@ const Nav = () => {
           <>
             <li style={liStyle}>
               <Link href="/cart">
-                <a style={aStyle}>Cart</a>
+                <a style={aStyle}>
+                  Cart{" "}
+                  <span
+                    style={{
+                      background: "red",
+                      color: "white",
+                      padding: "3px",
+                      borderRadius: "50%",
+                    }}
+                  >
+                    {user && user.carts && user.carts.length === 0 && 0}
+                    {user &&
+                      user.carts &&
+                      user.carts.length > 0 &&
+                      user.carts.reduce((sum, item) => sum + item.quantity, 0)}
+                  </span>
+                </a>
               </Link>
             </li>
             <li style={liStyle}>

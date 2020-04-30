@@ -1,10 +1,7 @@
-import { useContext } from "react";
-import Link from "next/link";
 import { useQuery } from "@apollo/react-hooks";
 import gql from "graphql-tag";
-import Router from "next/router";
 
-import { AuthContext } from "../appState/AuthProvider";
+import ProductItem from "./ProductItem";
 
 export const QUERY_PRODUCTS = gql`
   {
@@ -24,7 +21,7 @@ const Products = () => {
   const { data, loading, error } = useQuery(QUERY_PRODUCTS, {
     pollInterval: 3000,
   });
-  const { user } = useContext(AuthContext);
+
   if (error)
     return <p>Ooobs...something went wrong, please try again later.</p>;
 
@@ -40,51 +37,7 @@ const Products = () => {
       }}
     >
       {data.products.map((prod) => (
-        <div
-          key={prod.id}
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            marginBottom: "40px",
-            border: "solid 1px black",
-            padding: "10px",
-          }}
-        >
-          <Link href="/products/[productId]" as={`/products/${prod.id}`}>
-            <a>
-              <img src={prod.imageUrl} alt={prod.description} width="250px" />
-            </a>
-          </Link>
-          <h3>{prod.description}</h3>
-          <h4>{prod.price} $</h4>
-          {user && user.id === prod.user.id ? (
-            <button
-              style={{
-                background: "green",
-                color: "white",
-                padding: "10px",
-                cursor: "pointer",
-                border: "none",
-              }}
-              onClick={() => Router.push("/manageproduct")}
-            >
-              Manage Product
-            </button>
-          ) : (
-            <button
-              style={{
-                background: "green",
-                color: "white",
-                padding: "10px",
-                cursor: "pointer",
-                border: "none",
-              }}
-            >
-              Add to Cart
-            </button>
-          )}
-        </div>
+        <ProductItem key={prod.id} prod={prod}></ProductItem>
       ))}
     </div>
   );
