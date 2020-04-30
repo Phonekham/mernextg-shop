@@ -16,6 +16,9 @@ const LOG_IN = gql`
         email
         products {
           id
+          description
+          imageUrl
+          price
         }
         carts {
           id

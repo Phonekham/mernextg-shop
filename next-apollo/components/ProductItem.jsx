@@ -4,7 +4,7 @@ import Router from "next/router";
 import Link from "next/link";
 import gql from "graphql-tag";
 
-import { ME } from "./UserProducts";
+import { ME } from "./Nav";
 import { AuthContext } from "../appState/AuthProvider";
 
 export const ADD_TO_CART = gql`
