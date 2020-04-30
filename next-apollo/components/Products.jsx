@@ -1,6 +1,10 @@
+import { useContext } from "react";
 import Link from "next/link";
 import { useQuery } from "@apollo/react-hooks";
 import gql from "graphql-tag";
+import Router from "next/router";
+
+import { AuthContext } from "../appState/AuthProvider";
 
 export const QUERY_PRODUCTS = gql`
   {
@@ -9,6 +13,9 @@ export const QUERY_PRODUCTS = gql`
       description
       price
       imageUrl
+      user {
+        id
+      }
     }
   }
 `;
@@ -17,6 +24,7 @@ const Products = () => {
   const { data, loading, error } = useQuery(QUERY_PRODUCTS, {
     pollInterval: 3000,
   });
+  const { user } = useContext(AuthContext);
   if (error)
     return <p>Ooobs...something went wrong, please try again later.</p>;
 
@@ -50,17 +58,32 @@ const Products = () => {
           </Link>
           <h3>{prod.description}</h3>
           <h4>{prod.price} $</h4>
-          <button
-            style={{
-              background: "green",
-              color: "white",
-              padding: "10px",
-              cursor: "pointer",
-              border: "none",
-            }}
-          >
-            Add to Cart
-          </button>
+          {user && user.id === prod.user.id ? (
+            <button
+              style={{
+                background: "green",
+                color: "white",
+                padding: "10px",
+                cursor: "pointer",
+                border: "none",
+              }}
+              onClick={() => Router.push("/manageproduct")}
+            >
+              Manage Product
+            </button>
+          ) : (
+            <button
+              style={{
+                background: "green",
+                color: "white",
+                padding: "10px",
+                cursor: "pointer",
+                border: "none",
+              }}
+            >
+              Add to Cart
+            </button>
+          )}
         </div>
       ))}
     </div>

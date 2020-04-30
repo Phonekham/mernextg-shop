@@ -4,6 +4,7 @@ import gql from "graphql-tag";
 import fetch from "isomorphic-unfetch";
 
 import { QUERY_PRODUCTS } from "./Products";
+import { ME } from "./UserProducts";
 
 const CREATE_PRODUCT = gql`
   mutation CREATE_PRODUCT(
@@ -33,7 +34,16 @@ const ManageProduct = () => {
   });
 
   const [createProduct, { loading, error }] = useMutation(CREATE_PRODUCT, {
-    refetchQueries: [{ query: QUERY_PRODUCTS }],
+    refetchQueries: [{ query: QUERY_PRODUCTS }, { query: ME }],
+    onCompleted: (data) => {
+      if (data) {
+        setProductData({
+          description: "",
+          imageUrl: "",
+          price: "",
+        });
+      }
+    },
   });
 
   const handleChange = (e) =>
