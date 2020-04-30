@@ -29,7 +29,7 @@ const QUERY_USER = {
 };
 
 function MyApp({ Component, pageProps, apollo, user }) {
-  console.log(user);
+  // console.log(user);
 
   return (
     <ApolloProvider client={apollo}>

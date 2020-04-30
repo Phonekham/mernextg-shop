@@ -13,7 +13,6 @@ const aStyle = {
 
 const Nav = () => {
   const { user, signout } = useContext(AuthContext);
-  console.log(user);
 
   return (
     <nav
