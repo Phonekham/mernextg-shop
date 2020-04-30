@@ -8,6 +8,7 @@ const Query = {
     return User.findById(userId)
       .populate({
         path: "products",
+        options: { sort: { createdAt: "desc" } },
         populate: { path: "user" },
       })
       .populate({ path: "carts", populate: { path: "product" } });
