@@ -17,12 +17,16 @@ const QUERY_USER = {
         product {
           id
           description
+          imageUrl
+          price
         }
         quantity
       }
       products {
         id
         description
+        imageUrl
+        price
       }
     }
   }

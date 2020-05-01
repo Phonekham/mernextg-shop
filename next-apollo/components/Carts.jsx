@@ -29,6 +29,27 @@ const Carts = () => {
         user.carts.map((cart) => (
           <CartItem cart={cart} key={cart.id}></CartItem>
         ))}
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "2fr 1fr 1fr 1fr 1fr 2fr",
+          width: "100%",
+        }}
+      >
+        <div style={{ margin: "auto" }}></div>
+        <div style={{ margin: "auto" }}></div>
+        <div style={{ margin: "auto" }}></div>
+        <div style={{ margin: "auto" }}></div>
+        <div style={{ margin: "auto" }}>
+          {user &&
+            user.carts.length > 0 &&
+            user.carts.reduce(
+              (sum, cart) => sum + cart.quantity * cart.product.price,
+              0
+            )}
+        </div>
+        <div style={{ margin: "auto" }}></div>
+      </div>
     </div>
   );
 };

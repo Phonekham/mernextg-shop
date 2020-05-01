@@ -5,70 +5,29 @@ import fetch from "isomorphic-unfetch";
 
 import { ME } from "./Nav";
 
-// const UPDATE_PRODUCT = gql`
-//   mutation UPDATE_PRODUCT(
-//     $id: ID!
-//     $description: String
-//     $price: Float
-//     $imageUrl: String
-//   ) {
-//     updateProduct(
-//       id: $id
-//       description: $description
-//       price: $price
-//       imageUrl: $imageUrl
-//     ) {
-//       id
-//       description
-//       price
-//       imageUrl
-//     }
-//   }
-// `;
+const DELETE_CART = gql`
+  mutation deleteCart($id: ID!) {
+    deleteCart(id: $id) {
+      id
+    }
+  }
+`;
 
 const CartItem = ({ cart }) => {
-  //   const [updateProduct, { loading, error }] = useMutation(UPDATE_PRODUCT, {
-  //     refetchQueries: [{ query: QUERY_PRODUCTS }, { query: ME }],
-  //     onCompleted: (data) => {
-  //       setProductData(data.updateProduct);
-  //       setEdit(false);
-  //       console.log(data);
-  //     },
-  //   });
+  const [deleteCart, { loading, error }] = useMutation(DELETE_CART, {
+    onCompleted: (data) => {
+      console.log(data);
+    },
+    refetchQueries: [{ query: ME }],
+  });
 
-  //   const handleSubmit = async () => {
-  //     if (!file && productData === product) {
-  //       setProductData(product);
-  //       setEdit(false);
-  //       return;
-  //     }
-  //     console.log(productData);
-
-  //     try {
-  //       if (file) {
-  //         const url = await uploadFile();
-  //         if (url) {
-  //           await updateProduct({
-  //             variables: {
-  //               ...productData,
-  //               imageUrl: url,
-  //               price: +productData.price,
-  //             },
-  //           });
-  //         }
-  //       } else {
-  //         await updateProduct({
-  //           variables: {
-  //             ...productData,
-  //             imageUrl: productData.imageUrl,
-  //             price: +productData.price,
-  //           },
-  //         });
-  //       }
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   };
+  const handleSubmit = async () => {
+    try {
+      await deleteCart({ variables: { id: cart.id } });
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
     <div
@@ -115,9 +74,9 @@ const CartItem = ({ cart }) => {
             background: "red",
             color: "white",
           }}
-          //   onClick={handleSubmit}
+          onClick={handleSubmit}
         >
-          Delete
+          {loading ? "Deleting" : error ? "error" : "Detete"}
         </button>
       </div>
     </div>

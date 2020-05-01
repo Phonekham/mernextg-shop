@@ -232,7 +232,7 @@ const Mutation = {
       throw new Error("Not authorized");
     }
     // Delete cart
-    const deleteCart = await CartItem.findOneAndRemove(id);
+    const deleteCart = await CartItem.findByIdAndRemove(id);
     const updatedUserCart = user.carts.filter(
       (cartId) => cartId.toString() !== deleteCart.id.toString()
     );
