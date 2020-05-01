@@ -31,6 +31,7 @@ const CartItem = ({ cart }) => {
 
   return (
     <div
+      key={cart.id}
       style={{
         display: "grid",
         gridTemplateColumns: "2fr 1fr 1fr 1fr 1fr 2fr",
