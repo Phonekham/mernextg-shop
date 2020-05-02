@@ -5,14 +5,15 @@ import passport from "passport";
 
 dotenv.config();
 import server from "./server";
-import { facebookPassportConfig } from "./utils/passport";
-import { facebookAuth } from "./utils/socialProvidersAuth";
+import { facebookPassportConfig, googlePassportConfig } from "./utils/passport";
+import { facebookAuth, googleAuth } from "./utils/socialProvidersAuth";
 
 // const DB_USER = "username"; // use your mongodb cluster username
 // const DB_PASSWORD = "password"; // use your mongodb cluster password
 // const DB_NAME = "ecommerce";
 const { PORT } = process.env;
 facebookPassportConfig();
+googlePassportConfig();
 
 const createServer = async () => {
   try {
@@ -43,6 +44,20 @@ const createServer = async () => {
       //   res.redirect("http://localhost:3000/products");
       // }
       facebookAuth
+    );
+
+    app.get(
+      "/auth/google",
+      passport.authenticate("google", { scope: ["profile", "email"] })
+    );
+
+    app.get(
+      "/auth/google/callback",
+      passport.authenticate("google", {
+        session: false,
+        failureRedirect: "http://localhost:3000/signin",
+      }),
+      googleAuth
     );
 
     server.applyMiddleware({ app });
