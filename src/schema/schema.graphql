@@ -35,7 +35,7 @@ type User {
   products: [Product]
   carts: [CartItem]!
   orders: [Order]!
-  cardIds: [String]!
+  cards: [String]!
   createdAt: Date!
 }
 
