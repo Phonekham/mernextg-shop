@@ -7,6 +7,11 @@ import nodemailer from "nodemailer";
 import User from "../models/user";
 import Product from "../models/product";
 import CartItem from "../models/cartItem";
+import {
+  retrieveCustomer,
+  createCharge,
+  createCustomer,
+} from "../utils/omiseUtils";
 
 const Mutation = {
   login: async (parent, args, context, info) => {
@@ -239,7 +244,58 @@ const Mutation = {
     await User.findByIdAndUpdate(userId, { carts: updatedUserCart });
     return deleteCart;
   },
-  createOrder: async (parent, { token }, { userId }, info) => {},
+  createOrder: async (parent, { token }, { userId }, info) => {
+    if (!userId) throw new Error("please login");
+    const user = await User.findById(userId);
+    // create charge with omise
+    let customer = retrieveCustomer(user.cartItems[0]);
+    if (!customer) {
+      const newCustomer = await createCustomer(user.email, user.name, token);
+      customer = newCustomer;
+    }
+
+    const charge = await createCharge(amount, customer.id);
+
+    if (!charge)
+      throw new Error("Something went wrong with payment, please try again.");
+
+    // Convert cartItem to OrderItem
+    const orderItemArray = user.carts.map((cart) =>
+      OrderItem.create({
+        product: cart.product,
+        quanity: cart.quantity,
+        user: cart.user,
+      })
+    );
+
+    // Delete cartItem from the database
+    user.carts.map((cart) => CartItem.findByIdAndRemove(cart.id));
+
+    // Create order
+
+    const order = await Order.create({
+      user: userId,
+      items: orderItemArray.map((orderItem) => orderItem.id),
+    });
+
+    // Update user info in the database
+    await User.findByIdAndUpdate(userId, {
+      cardIds:
+        !user.cardIds || user.cardIds.length === 0
+          ? [customer.id]
+          : [...user.cardIds, customer.id],
+      carts: [],
+      orders:
+        !user.orders || user.orders.length === 0
+          ? [order.id]
+          : [...user.orders, order.id],
+    });
+
+    // return order
+    return (await Order.findById(order.id))
+      .populate({ path: "user" })
+      .populate({ path: "items" });
+  },
 };
 
 export default Mutation;
