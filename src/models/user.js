@@ -37,6 +37,17 @@ const userSchema = new mongoose.Schema({
       ref: "CartItem",
     },
   ],
+  orders: [
+    {
+      type: String,
+    },
+  ],
+  cardIds: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Order",
+    },
+  ],
   createdAt: {
     type: Date,
     required: true,

@@ -23,6 +23,7 @@ type Mutation {
   ): Product!
   addToCart(id: ID!): CartItem! #product id
   deleteCart(id: ID!): CartItem! #cartItem id
+  createOrder(token: String): Order
 }
 
 scalar Date
@@ -33,6 +34,8 @@ type User {
   email: String!
   products: [Product]
   carts: [CartItem]!
+  orders: [Order]!
+  cardIds: [String]!
   createdAt: Date!
 }
 
@@ -60,4 +63,19 @@ type AuthData {
 
 type Message {
   message: String!
+}
+
+type Order {
+  id: ID!
+  user: User!
+  items: [OrderItem!]!
+  createdAt: Date!
+}
+
+type OrderItem {
+  id: ID!
+  product: Product!
+  quantity: Int!
+  user: User!
+  createdAt: Date!
 }
