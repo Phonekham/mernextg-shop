@@ -32,6 +32,8 @@ export const facebookAuth = async (req, res) => {
     res.cookie("jwt", token);
     res.redirect("http://localhost:3000/products");
   } catch (error) {
+    console.log(error);
+
     res.redirect("http://localhost:3000/signin");
   }
 };

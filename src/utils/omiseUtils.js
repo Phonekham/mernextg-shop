@@ -2,7 +2,7 @@ import dotenv from "dotenv";
 dotenv.config();
 import omiseFn from "omise";
 
-omiseFn({
+const omise = omiseFn({
   publicKey: process.env.OMISE_PUBLIC_KEY,
   publicKey: process.env.OMISE_SECRET_KEY,
 });

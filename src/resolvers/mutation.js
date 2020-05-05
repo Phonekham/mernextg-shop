@@ -248,10 +248,12 @@ const Mutation = {
     if (!userId) throw new Error("please login");
     const user = await User.findById(userId).populate({
       path: "carts",
-      populate: { path: "products" },
+      populate: {
+        path: "product",
+      },
     });
     // create charge with omise
-    let customer = retrieveCustomer(user.cards[0] && user.card[0].id);
+    let customer = await retrieveCustomer(user.cards[0] && user.cards[0].id);
     if (!customer) {
       const newCustomer = await createCustomer(user.email, user.name, token);
       customer = newCustomer;
@@ -274,7 +276,9 @@ const Mutation = {
           last_digits,
         },
       };
-      await User.findByIdAndUpdate(userId, { cards: user.cards });
+      await User.findByIdAndUpdate(userId, {
+        cards: user.cards,
+      });
     }
 
     const charge = await createCharge(amount, customer.id);
@@ -296,6 +300,7 @@ const Mutation = {
     };
 
     // Create order
+    const orderItemArray = await convertCartToOrder();
     const order = await Order.create({
       user: userId,
       items: orderItemArray.map((orderItem) => orderItem.id),
@@ -318,8 +323,15 @@ const Mutation = {
 
     // return order
     return (await Order.findById(order.id))
-      .populate({ path: "user" })
-      .populate({ path: "items", populate: { path: "product" } });
+      .populate({
+        path: "user",
+      })
+      .populate({
+        path: "items",
+        populate: {
+          path: "product",
+        },
+      });
   },
 };
 
