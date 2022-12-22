@@ -19,7 +19,7 @@
     "express": "^4.17.1",
     "graphql": "^15.0.0",
     "graphql-iso-date": "^3.6.1",
-    "jsonwebtoken": "^8.5.1",
+    "jsonwebtoken": "^9.0.0",
     "mongoose": "^5.9.10",
     "nodemailer": "^6.4.6",
     "omise": "^0.6.1",
